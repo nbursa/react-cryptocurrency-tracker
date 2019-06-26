@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './App.css';
+import './App.scss';
 import axios from 'axios';
 
 class App extends Component {
@@ -21,7 +21,7 @@ class App extends Component {
         'convert': 'USD'
       },
       headers: {
-        'X-CMC_PRO_API_KEY': '9db6bdb7-fe5b-41e0-88dd-6bb1c45e7a22'
+        'X-CMC_PRO_API_KEY': ''
       },
       json: true,
       gzip: true
