@@ -29,7 +29,6 @@ class App extends Component {
   
 
   render() {
-    const loading = this.state.loading;
     return (
       <div className="App">
         <header className="App-header">

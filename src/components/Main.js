@@ -18,7 +18,7 @@ class Main extends Component {
   selected(e, key) {
     e.target.select();
   }
-
+  
   handleChange(e, key) {
     if (localStorage.getItem("my" + this.state.cryptos[key].name) !== null) {
       localStorage.setItem("my" + this.state.cryptos[key].name, this.state.cryptos[key].ammount);
@@ -29,10 +29,10 @@ class Main extends Component {
   }
 
   handleSubmit(e, key) {
-    if (localStorage.getItem("my" + this.state.cryptos[key].name) !== null) {
+    if (localStorage.getItem("my" + this.state.cryptos[key].name) !== null || localStorage.getItem("my" + this.state.cryptos[key].name) !== this.state.cryptos[key].ammount) {
       localStorage.setItem("my" + this.state.cryptos[key].name, this.state.cryptos[key].ammount);
     }
-    localStorage.getItem("my" + this.state.cryptos[key].name)
+    localStorage.getItem("my" + this.state.cryptos[key].name);
     e.preventDefault();
   }
 
@@ -69,9 +69,10 @@ class Main extends Component {
                       item.ammount = localStorage.getItem("my" + item.name);
                       this.setState({cryptos: newCryptos});
                     }
-                    return this.state.cryptos;
+                    let sorted = this.state.cryptos.sort((a, b) => (a.quote.USD.price < b.quote.USD.price) ? 1 : -1);
+                    let limited = sorted.slice(0, 50);
+                    return this.setState({cryptos: limited});
                   });
-
                 };
                 getInitialState();
               })
@@ -81,7 +82,12 @@ class Main extends Component {
       await this.setState({loading: false});
     };
     getCryptos();
+    // this.interval = setInterval(() => getCryptos(), 60000);
   }
+
+  // componentWillUnmount () {
+  //   clearInterval(this.interval);
+  // }
   
   render() {
     let loading = this.state.loading;
@@ -103,7 +109,7 @@ class Main extends Component {
             {
             loading ?
               <tr className="App-loader">
-                <td colspan="7">Collecting data, please wait...</td>
+                <td colSpan="7">Collecting data, please wait...</td>
               </tr>
             :
               Object.keys(this.state.cryptos).map((key) => (
@@ -114,8 +120,8 @@ class Main extends Component {
                   <td>{"$ " + this.state.cryptos[key].quote.USD.price.toFixed(2)}</td>
                   <td className={this.state.cryptos[key].quote.USD.percent_change_24h.toFixed(2) < 0 ? 'red' : 'green'}>{this.state.cryptos[key].quote.USD.percent_change_24h.toFixed(2) + " %"}</td>
                   <td>
-                    <input type="number" value={this.state.cryptos[key].ammount} onFocus={(e) => this.selected(e, key)} onChange={(e) => this.handleChange(e, key)}></input>
-                    <input type="submit" value="Submit" disabled={(this.state.cryptos[key].ammount) <= 0 ? true : false} onClick={(e) => this.handleSubmit(e, key)}></input>
+                    <input type="number" value={localStorage.getItem("my" + this.state.cryptos[key].name) || this.state.cryptos[key].ammount} onFocus={(e) => this.selected(e, key)} onChange={(e) => this.handleChange(e, key)} ref={ function(node){ this.inputValue = node }.bind(this) }></input>
+                    <input type="submit" value="Submit" disabled={this.state.cryptos[key].ammount <= 0 && localStorage.getItem("my" + this.state.cryptos[key].name) <= 0} onClick={(e) => this.handleSubmit(e, key)}></input>
                   </td>
                   <td>{"$ " + (this.state.cryptos[key].quote.USD.price * this.state.cryptos[key].ammount).toFixed(2)}</td>
                 </tr>
