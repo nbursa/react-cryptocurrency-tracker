@@ -42,7 +42,7 @@ class Main extends Component {
       method: 'GET',
       uriListings: 'https://cors-anywhere.herokuapp.com/https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
       headers: {
-        'X-CMC_PRO_API_KEY': '9db6bdb7-fe5b-41e0-88dd-6bb1c45e7a22'
+        'X-CMC_PRO_API_KEY': ''
       },
       json: true,
       gzip: true
